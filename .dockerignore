@@ -1,0 +1,9 @@
+# The image needs the app package and the pinned requirements, nothing else.
+tests
+__pycache__
+**/__pycache__
+.pytest_cache
+*.pyc
+pytest.ini
+README.md
+.git

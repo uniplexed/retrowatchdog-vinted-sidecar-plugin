@@ -1,0 +1,29 @@
+# The one dependency, pinned to an exact version on purpose.
+#
+# Bumping this line IS the maintenance action for this service. Vinted is
+# hostile to scraping and changes its defences; when the sidecar stops
+# returning listings, the fix is almost never in this repository — it is a new
+# release of the community package, and adopting it is a one-line change here
+# followed by a rebuild.
+#
+# vinted_scraper 5.0.2 (MIT, requires Python >= 3.8) pulls httpx[brotli]; that
+# transitive dependency is deliberately left unpinned so a security fix in
+# httpx does not need a release here.
+#
+# 2026-09-19: 4.0.0 -> 5.0.2, and this is the case the paragraph above
+# describes. From about 2026-09-14 every search answered 404: Vinted moved
+# catalogue search to a `svc-catalogue` endpoint on its `api.` host, which also
+# wants an anonymous id scraped with the session cookie. Upstream fixed it in
+# 5.0.0 (PR #216). Its one breaking change -- the `session_cookie` constructor
+# argument became `session: VintedSession` -- does not reach this repository,
+# which never passed one (app/scrapers.py). 5.0.1 derives the locale instead of
+# hardcoding en-US; 5.0.2 changes documentation only.
+#
+# 2026-10-17: 5.0.2 -> 5.0.3, a security release only: it raises the floors of
+# httpx (improper input validation) and h11 (malformed chunked bodies). No API
+# change reaches app/scrapers.py.
+vinted_scraper==5.0.3
+
+# Test-only, not installed in the image (see the Dockerfile): the suite runs on
+# the host or in CI, never inside the runtime container.
+# pytest
